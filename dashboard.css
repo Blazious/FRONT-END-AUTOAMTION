@@ -1,0 +1,332 @@
+/* Base Styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+@media (max-width: 640px) {
+    .flex-col-sm {
+        flex-direction: column;
+    }
+    
+    .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .py-8 {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .tab-button {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    font-weight: 600;
+    color: #374151;
+    background-color: #f9fafb;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Buttons */
+button {
+    transition: all 0.15s ease;
+}
+
+.tab-content {
+      display: none;
+  }
+  .tab-content.active {
+      display: block;
+  }
+  .tab-button.active {
+      background-color: #fff;
+      color: #1f2937;
+      border-bottom: 2px solid #2563eb;
+  }
+  .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+  }
+  .dropdown-menu.show {
+      display: block;
+  }
+  .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+  }
+  .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  .animate-spin {
+      animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+  }
+  .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+  }
+  .status-paid {
+      background-color: #dcfce7;
+      color: #166534;
+  }
+  .status-sent {
+      background-color: #dbeafe;
+      color: #1e40af;
+  }
+  .status-draft {
+      background-color: #f3f4f6;
+      color: #374151;
+  }
+
+/* Forms */
+input, select {
+    transition: all 0.2s ease;
+    height: 2.5rem;
+}
+
+input:focus, select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Tabs */
+.tab-button {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.tab-button:not(.active):hover {
+    color: #1e40af;
+    border-bottom-color: #dbeafe;
+}
+
+.tab-button.active {
+    font-weight: 600;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    min-width: 12rem;
+    padding: 0.25rem 0;
+}
+
+.dropdown-menu a {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.status-paid {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-sent {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status-draft {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+    table.responsive-table {
+        display: block;
+    }
+    
+    table.responsive-table thead {
+        display: none;
+    }
+    
+    table.responsive-table tbody {
+        display: block;
+    }
+    
+    table.responsive-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+    }
+    
+    table.responsive-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    table.responsive-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6b7280;
+        margin-right: 1rem;
+    }
+    
+    table.responsive-table td:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Utility Classes */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+@media (max-width: 640px) {
+    .truncate {
+        max-width: 120px;
+    }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Card Shadows */
+.card-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Hover Effects */
+.hover-scale {
+    transition: transform 0.15s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* Focus States */
+.focus-visible:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Print Styles */
+@media print {
+    header, nav, .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .print-full-width {
+        width: 100% !important;
+    }
+}

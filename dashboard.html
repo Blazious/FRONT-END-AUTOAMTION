@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dash.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Header Section -->
+    <header class="header-gradient text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Logo and Title -->
+                <div class="flex items-center">
+                    <img src="xyflow.svg" alt="Company Logo" class="h-10 w-10 rounded-full">
+                    <div class="ml-3">
+                        <h1 class="text-xl font-bold">WastePro Automation</h1>
+                        <p class="text-xs text-blue-100">Efficient Waste Management</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Message and User Controls -->
+            <div class="flex items-center space-x-4">
+                <p class="font-medium">
+                    Welcome back, <span id="user-welcome-name" class="font-bold">...</span>
+                </p>
+                <!-- Logout Button -->
+                <button class="logout-btn flex items-center space-x-1 bg-red-600 hover:bg-red-700 px-3 py-1 rounded">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard" class="min-h-screen">
+        <nav class="bg-white shadow p-4">
+            <div class="flex space-x-2 overflow-x-auto">
+                <button data-tab="clients" class="tab-button px-4 py-2 bg-blue-600 text-white rounded">Clients</button>
+                <button data-tab="services-tab" class="tab-button px-4 py-2 bg-gray-200 rounded">Collections
+                </button>
+                <button data-tab="collections" class="tab-button px-4 py-2 bg-gray-200 rounded">Collection
+                    Items</button>
+                <button data-tab="invoices" class="tab-button px-4 py-2 bg-gray-200 rounded">Invoices</button>
+                <button data-tab="expenses" class="tab-button px-4 py-2 bg-gray-200 rounded">Expenses</button>
+                <button data-tab="receipts" class="tab-button px-4 py-2 bg-gray-200 rounded">Receipts</button>
+                <button data-tab="analytics" class="tab-button px-4 py-2 bg-gray-200 rounded">Analytics</button>
+
+                <!-- New eTIMS button -->
+                <a href="https://etims.kra.go.ke" target="_blank"
+                    class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                    eTIMS Portal
+                </a>
+
+            </div>
+        </nav>
+
+        <main class="container mx-auto p-4">
+            <!-- Clients Tab -->
+            <div id="clients" class="tab-content bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Clients</h2>
+                    <button id="open-client-modal"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Client</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">Name</th>
+                                <th class="p-2">Address</th>
+                                <th class="p-2">City</th>
+                                <th class="p-2">Phone</th>
+                                <th class="p-2">Email</th>
+                                <th class="p-2">WHT Agent</th>
+                                <th class="p-2">KRA PIN</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table-body">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                    <div id="clients-pagination" class="mt-4 flex justify-center"></div>
+                </div>
+            </div>
+
+            <!-- Collection Items Tab -->
+            <div id="collections" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Collections</h2>
+
+                    <button id="open-collection-modal"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Collection Item</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">Client</th>
+                                <th class="p-2">Date Collected</th>
+                                <th class="p-2">Due Date</th>
+                                <th class="p-2">Waste Category</th>
+                                <th class="p-2">Quantity</th>
+                                <th class="p-2">Unit</th>
+                                <th class="p-2">Unit Price</th>
+                                <th class="p-2">Amount</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collections-table-body">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Invoices Tab -->
+            <div id="invoices" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Invoices</h2>
+                    <button id="open-invoice-modal"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create New Invoice</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">Invoice #</th>
+                                <th class="p-2">Client</th>
+                                <th class="p-2">Issued</th>
+                                <th class="p-2">Due</th>
+                                <th class="p-2">Status</th>
+                                <th class="p-2">Total Due</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-table-body">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div id="expenses" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Expenses</h2>
+                    <button id="open-expense-modal"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Expense</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left mb-6">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Type</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Amount</th>
+                                <th class="p-2">Reference</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-table-body">
+                            <!-- JS Populates Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!--  Service Tab -->
+            <div id="services-tab" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Services</h2>
+                    <button id="open-service-modal" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Add Service
+                    </button>
+                </div>
+
+                <!--  Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">ID</th>
+                                <th class="p-2">Client</th>
+                                <th class="p-2">Date Started</th>
+                                <th class="p-2">Due Date</th>
+                                <th class="p-2">Invoiced</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-table-body">
+                            <!-- Filled dynamically by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Receipts Tab -->
+            <div id="receipts" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Receipts</h2>
+                    <button id="open-receipt-modal"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Receipt</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border text-left mb-6">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">Receipt No.</th>
+                                <th class="p-2">Client</th>
+                                <th class="p-2">Invoice</th>
+                                <th class="p-2">Amount</th>
+                                <th class="p-2">Method</th>
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="receipts-table-body">
+                            <!-- JS fills here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content hidden bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold mb-4">Analytics Dashboard</h2>
+
+                <form id="analytics-filter-form" class="flex flex-wrap gap-4 items-end mb-6">
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
+                        <input type="date" id="start-date" name="start_date" class="border p-2 rounded w-full">
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
+                        <input type="date" id="end-date" name="end_date" class="border p-2 rounded w-full">
+                    </div>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Filter</button>
+                </form>
+
+                <!-- Summary Metrics -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-gray-100 rounded shadow">
+                        <p class="text-sm text-gray-600">Total Revenue</p>
+                        <p id="total-revenue" class="text-xl font-bold text-green-600">Ksh 0.00</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded shadow">
+                        <p class="text-sm text-gray-600">Total Expenses</p>
+                        <p id="total-expense" class="text-xl font-bold text-red-600">Ksh 0.00</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded shadow">
+                        <p class="text-sm text-gray-600">Net Profit</p>
+                        <p id="net-profit" class="text-xl font-bold text-blue-600">Ksh 0.00</p>
+                        <p id="profit-margin" class="text-sm text-gray-500">(0.00%)</p>
+                    </div>
+                </div>
+
+                <!-- Graph -->
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-lg font-semibold mb-2">Financial Overview Chart</h3>
+                    <img id="analytics-chart" src="" alt="Analytics Chart"
+                        class="w-full rounded border border-gray-200">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Client Modal -->
+    <div id="client-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg w-full max-w-2xl">
+            <h3 class="text-xl font-semibold mb-4">Add New Client</h3>
+            <form id="client-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label for="client-name" class="block text-sm font-medium mb-1">Name</label>
+                    <input type="text" id="client-name" name="name" placeholder="Name" required
+                        class="border p-2 w-full">
+                </div>
+                <div class="col-span-2">
+                    <label for="client-address" class="block text-sm font-medium mb-1">Address</label>
+                    <textarea id="client-address" name="address" placeholder="Address" required
+                        class="border p-2 w-full"></textarea>
+                </div>
+                <div>
+                    <label for="client-city" class="block text-sm font-medium mb-1">City</label>
+                    <input type="text" id="client-city" name="city" placeholder="City" required
+                        class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="client-phone" class="block text-sm font-medium mb-1">Phone</label>
+                    <input type="text" id="client-phone" name="phone" placeholder="Phone" required
+                        class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="client-email" class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" id="client-email" name="email" placeholder="Email" required
+                        class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="client-kra-pin" class="block text-sm font-medium mb-1">KRA PIN</label>
+                    <input type="text" id="client-kra-pin" name="kra_pin" placeholder="KRA PIN"
+                        class="border p-2 w-full">
+                </div>
+                <div class="col-span-2">
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="wht_agent" class="border p-2">
+                        WHT Agent
+                    </label>
+                </div>
+                <div class="col-span-2 flex justify-end gap-2">
+                    <button type="button" id="close-client-modal"
+                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Modal for Creating a New Service -->
+    <div id="service-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded w-full max-w-md relative">
+            <button id="close-service-modal" class="absolute top-2 right-2 text-red-600 text-lg">
+                &times;
+            </button>
+            <h2 class="text-xl font-semibold mb-4">Create New Service</h2>
+            <form id="service-form" class="space-y-4">
+                <div>
+                    <label for="service-client" class="block mb-1">Client</label>
+                    <select id="service-client" required class="w-full p-2 border rounded">
+                        <option value="">Select Client</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="service-start-date" class="block mb-1">Date Started</label>
+                    <input type="date" id="service-start-date" required class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label for="service-due-date" class="block mb-1">Due Date</label>
+                    <input type="date" id="service-due-date" required class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="service-invoiced" class="form-checkbox text-green-600">
+                        <span class="ml-2">Mark as Invoiced</span>
+                    </label>
+                </div>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+            </form>
+        </div>
+    </div>
+    <!-- Collection Items Modal -->
+    <div id="collection-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg w-full max-w-3xl">
+            <h3 class="text-xl font-semibold mb-4">Add Collection Item</h3>
+            <form id="collection-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label for="collection-client" class="block text-sm font-medium mb-1">Client</label>
+                    <select id="collection-client" name="client_id" required class="border p-2 w-full">
+                        <option value="">Select Client</option>
+                        <!-- Filled dynamically -->
+                    </select>
+                    <div class="col-span-2">
+                        <label for="collection-select" class="block text-sm font-medium mb-1">Collection</label>
+                        <select id="collection-select" name="collection" required class="border p-2 w-full">
+                            <option value="">Select Collection</option>
+                            <!-- Will be filled dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-span-2">
+                    <label for="collection-waste-category" class="block text-sm font-medium mb-1">Waste Category</label>
+                    <select id="collection-waste-category" name="waste_category" required class="border p-2 w-full">
+                        <option value="">Select Waste Category</option>
+                        <option value="biohazard">Biohazard Collection (Hospitals)</option>
+                        <option value="chemical">Chemical Waste Disposal (Labs)</option>
+                        <option value="pharmaceutical">Pharmaceutical Waste</option>
+                        <option value="sharps">Sharps Pickup & Disposal</option>
+                        <option value="grain_byproducts">Grain Industry Byproducts</option>
+                        <option value="scrap_packaging">Scrap & Packaging Waste</option>
+                        <option value="processing_sludge">Processing Sludge</option>
+                        <option value="scheduled_bulk">Scheduled Bulk Pickups</option>
+                        <option value="household_mixed">Household Mixed Waste</option>
+                        <option value="recyclables">Recyclables Pickup</option>
+                        <option value="food_organic">Food & Organic Waste</option>
+                        <option value="estate_flats">Estate/Flats Scheduled Service</option>
+                        <option value="ewaste">E-Waste Collection</option>
+                        <option value="compostable">Compostable Waste</option>
+                        <option value="glass_plastic">Glass & Plastic Pickup</option>
+                        <option value="office_recycling">Office Recycling Programs</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="collection-date" class="block text-sm font-medium mb-1">Collection Date</label>
+                    <input type="date" id="collection-date" name="date_collected" required class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="collection-due-date" class="block text-sm font-medium mb-1">Due Date</label>
+                    <input type="date" id="collection-due-date" name="due_date" required class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="collection-quantity" class="block text-sm font-medium mb-1">Quantity</label>
+                    <input type="number" id="collection-quantity" name="quantity" placeholder="Quantity" required
+                        class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="collection-unit" class="block text-sm font-medium mb-1">Unit</label>
+                    <select id="collection-unit" name="unit" required class="border p-2 w-full">
+                        <option value="">Select Unit</option>
+                        <option value="kg">Kilogram (kg)</option>
+                        <option value="litre">Litre</option>
+                        <option value="container">Container</option>
+                        <option value="trip">Trip</option>
+                        <option value="ton">Ton</option>
+                        <option value="bin">Bin</option>
+                        <option value="month">Month</option>
+                        <option value="service_session">Service Session</option>
+                        <option value="bag">Bag</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="collection-unit-price" class="block text-sm font-medium mb-1">Unit Price</label>
+                    <input type="number" id="collection-unit-price" name="unit_price" step="0.01"
+                        placeholder="Unit Price" required class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="collection-amount" class="block text-sm font-medium mb-1">Amount</label>
+                    <input type="number" id="collection-amount" name="amount" step="0.01" placeholder="Amount" required
+                        class="border p-2 w-full" readonly>
+                </div>
+                <div class="col-span-2 flex justify-end gap-2">
+                    <button type="button" id="close-collection-modal"
+                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-semibold mb-4">Create Invoice</h3>
+            <form id="invoice-form" class="space-y-4">
+                <div>
+                    <label for="invoice-collection" class="block text-sm font-medium mb-1">Collection</label>
+                    <select id="invoice-collection" name="collection_id" required class="border p-2 w-full">
+                        <option value="">Select Collection</option>
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+
+                <!-- Client -->
+                <div>
+                    <label for="invoice-client" class="block text-sm font-medium mb-1">Client</label>
+                    <select id="invoice-client" name="client" required class="border p-2 w-full">
+                        <option value="">Select Client</option>
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+
+                <!-- Due date  -->
+                <div>
+                    <label for="invoice-due-date" class="block text-sm font-medium mb-1">Due Date</label>
+                    <input type="date" id="invoice-due-date" name="due_date" required class="border p-2 w-full">
+                </div>
+                <!-- Date Issued -->
+                <div>
+                    <label for="invoice-date-issued" class="block text-sm font-medium mb-1">Date Issued</label>
+                    <input type="date" id="invoice-date-issued" name="date_issued" required class="border p-2 w-full">
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label for="invoice-status" class="block text-sm font-medium mb-1">Status</label>
+                    <select id="invoice-status" name="status" class="border p-2 w-full">
+                        <option value="draft" selected>Draft</option>
+                        <option value="sent">Sent</option>
+                        <option value="paid">Paid</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- Terms -->
+                <div>
+                    <label for="invoice-terms" class="block text-sm font-medium mb-1">Terms</label>
+                    <textarea id="invoice-terms" name="terms" rows="2"
+                        class="border p-2 w-full">Payment due within 30 days</textarea>
+                </div>
+
+                <!-- Notes -->
+                <div>
+                    <label for="invoice-notes" class="block text-sm font-medium mb-1">Notes</label>
+                    <textarea id="invoice-notes" name="notes" rows="2"
+                        class="border p-2 w-full">Thank you for your business!</textarea>
+                </div>
+
+                <!-- Action buttons -->
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" id="close-invoice-modal"
+                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <!-- Expense Modal (updated version) -->
+    <div id="expense-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <!-- Added max-h and overflow-y -->
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Add Expense</h3>
+                <form id="expense-form" class="space-y-4" enctype="multipart/form-data">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Collection (optional)</label>
+                        <select id="expense-collection-select" name="collection" class="border p-2 w-full">
+                            <option value="">Select Collection</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date</label>
+                        <input type="date" name="date" required class="border p-2 w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Category</label>
+                        <select name="category" required class="border p-2 w-full">
+                            <option value="">Select Category</option>
+                            <option value="fuel">Fuel</option>
+                            <option value="truck_hire">Truck Hire</option>
+                            <option value="casuals">Casuals</option>
+                            <option value="dumping_fee">Dumping Fee</option>
+                            <option value="ppe">PPE</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Description</label>
+                        <textarea name="description" required class="border p-2 w-full h-24"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Amount</label>
+                        <input type="number" name="amount" step="0.01" required class="border p-2 w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Reference (optional)</label>
+                        <input type="text" name="reference" class="border p-2 w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Receipt</label>
+                        <input type="file" name="receipt" class="border p-2 w-full">
+                    </div>
+                    <div class="sticky bottom-0 bg-white pt-4 border-t"> <!-- Sticky footer -->
+                        <div class="flex justify-end gap-2">
+                            <button type="button" id="close-expense-modal"
+                                class="px-4 py-2 border rounded hover:bg-gray-100">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-semibold mb-4">Add Receipt</h3>
+            <form id="receipt-form" class="space-y-4" enctype="multipart/form-data">
+                <div>
+                    <label for="receipt-invoice" class="block text-sm font-medium mb-1">Invoice</label>
+                    <select id="receipt-invoice" name="invoice" required class="border p-2 w-full">
+                        <option value="">Select Invoice</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label for="receipt-amount" class="block text-sm font-medium mb-1">Amount</label>
+                    <input type="number" id="receipt-amount" name="amount" step="0.01" placeholder="Amount" required
+                        class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="receipt-payment-method" class="block text-sm font-medium mb-1">Payment Method</label>
+                    <select id="receipt-payment-method" name="payment_method" required class="border p-2 w-full">
+                        <option value="">Payment Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="mpesa">Mpesa</option>
+                        <option value="bank">Bank Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="receipt-date-paid" class="block text-sm font-medium mb-1">Date Paid</label>
+                    <input type="date" id="receipt-date-paid" name="date_paid" required class="border p-2 w-full">
+                </div>
+                <div>
+                    <label for="receipt-file" class="block text-sm font-medium mb-1">Receipt File</label>
+                    <input type="file" id="receipt-file" name="receipt" class="border p-2 w-full">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" id="close-receipt-modal"
+                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save</button>
+                </div>
+                <!-- Hidden field to auto-fill client ID -->
+                <input type="hidden" name="client" id="receipt-client">
+
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="clients.js"></script>
+    <script type="module" src="collections.js"></script>
+    <script type="module" src="invoices.js"></script>
+    <script type="module" src="collection-service.js"></script>
+    <script type="module" src="expenses.js"></script>
+    <script type="module" src="receipts.js"></script>
+    <script type="module" src="analytics.js"></script>
+    <script type="module" src="main.js"></script>
+    <script>
+        // Basic tab switching functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Hide all tab contents
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    // Deactivate all buttons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.add('bg-gray-200');
+                    });
+
+                    // Show selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.remove('hidden');
+
+                    // Activate current button
+                    this.classList.remove('bg-gray-200');
+                    this.classList.add('bg-blue-600', 'text-white');
+                });
+            });
+
+            // Activate first tab by default
+            if (tabButtons.length > 0) {
+                tabButtons[0].click();
+            }
+        });
+    </script>
+</body>
+
+</html>
