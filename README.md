@@ -1,1 +1,1 @@
-🔗 Backend Repo: [autoamtion-backend](https://github.com/Blazious/AUTOMATION-BACKEND-)
+🔗 Backend Repo: [automation-backend](https://github.com/Blazious/AUTOMATION-BACKEND-)
